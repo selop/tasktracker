@@ -87,4 +87,8 @@ public class TaskService {
             System.err.println("Error saving tasks to file: " + e.getMessage());
         }
     }
+
+    public void clearAllTasks() {
+        saveTasks(new ArrayList<>());
+    }
 }

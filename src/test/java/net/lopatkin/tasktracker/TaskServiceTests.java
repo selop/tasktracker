@@ -24,6 +24,7 @@ public class TaskServiceTests {
 
     @BeforeEach
     void setUp() {
+        taskService.clearAllTasks();
         System.setOut(new PrintStream(outContent));
     }
 
