@@ -38,8 +38,12 @@ public class TaskTrackerApplication {
 				"help", (a, t) -> printHelp()
 			);
 
-			commands.getOrDefault(args[0], (a, t) -> System.out.println("Unknown command. Use 'help' for usage information."))
-					.accept(args, taskService);
+			BiConsumer<String[], TaskService> command = commands.get(args[0]);
+			if (command != null) {
+				command.accept(args, taskService);
+			} else {
+				System.out.println("Unknown command. Use 'help' for usage information.");
+			}
 		};
 	}
 
@@ -51,29 +55,29 @@ public class TaskTrackerApplication {
 	}
 
 	private void updateTodo(String[] args, TaskService taskService) {
-		if (validateArgs(args, 3, "Please provide a task ID and new description.")) {
+		if (validateArgs(args, 3, "Please provide a task ID and new description.") && validateNumericId(args[1])) {
 			taskService.updateTask(Integer.parseInt(args[1]), String.join(" ", Arrays.copyOfRange(args, 2, args.length)));
 			System.out.println("Task updated successfully.");
 		}
 	}
 
 	private void deleteTodo(String[] args, TaskService taskService) {
-		if (validateArgs(args, 2, "Please provide a task ID.")) {
+		if (validateArgs(args, 2, "Please provide a task ID.") && validateNumericId(args[1])) {
 			taskService.deleteTask(Integer.parseInt(args[1]));
 			System.out.println("Task deleted successfully.");
 		}
 	}
 
 	private void markInProgressTodo(String[] args, TaskService taskService) {
-		if (validateArgs(args, 2, "Please provide a task ID.")) {
-			taskService.markTask(Integer.parseInt(args[1]), "in_progress");
+		if (validateArgs(args, 2, "Please provide a task ID.") && validateNumericId(args[1])) {
+			taskService.markTask(Integer.parseInt(args[1]), TaskService.STATUS_IN_PROGRESS);
 			System.out.println("Task marked as in progress successfully.");
 		}
 	}
 
 	private void markDoneTodo(String[] args, TaskService taskService) {
-		if (validateArgs(args, 2, "Please provide a task ID.")) {
-			taskService.markTask(Integer.parseInt(args[1]), "done");
+		if (validateArgs(args, 2, "Please provide a task ID.") && validateNumericId(args[1])) {
+			taskService.markTask(Integer.parseInt(args[1]), TaskService.STATUS_DONE);
 			System.out.println("Task marked as done successfully.");
 		}
 	}
@@ -84,9 +88,21 @@ public class TaskTrackerApplication {
 	}
 
 	private boolean validateArgs(String[] args, int requiredCount, String errorMessage) {
-		if (args.length >= requiredCount) return true;
-		System.out.println(errorMessage);
-		return false;
+		if (args.length < requiredCount) {
+			System.out.println(errorMessage);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validateNumericId(String id) {
+		try {
+			Integer.parseInt(id);
+			return true;
+		} catch (NumberFormatException e) {
+			System.out.println("Invalid task ID. Please provide a numeric ID.");
+			return false;
+		}
 	}
 
 	private void printHelp() {

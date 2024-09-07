@@ -1,0 +1,37 @@
+[
+    {
+      "id": 1,
+      "description": "Implement user authentication",
+      "status": "in_progress",
+      "createdAt": "2024-09-07T09:00:00",
+      "updatedAt": "2024-09-07T14:30:00"
+    },
+    {
+      "id": 2,
+      "description": "Design database schema",
+      "status": "done",
+      "createdAt": "2024-09-06T11:15:00",
+      "updatedAt": "2024-09-07T16:45:00"
+    },
+    {
+      "id": 3,
+      "description": "Set up CI/CD pipeline",
+      "status": "not_done",
+      "createdAt": "2024-09-07T13:20:00",
+      "updatedAt": "2024-09-07T13:20:00"
+    },
+    {
+      "id": 4,
+      "description": "Write unit tests for TaskService",
+      "status": "not_done",
+      "createdAt": "2024-09-07T15:00:00",
+      "updatedAt": "2024-09-07T15:00:00"
+    },
+    {
+      "id": 5,
+      "description": "Refactor error handling",
+      "status": "in_progress",
+      "createdAt": "2024-09-06T10:30:00",
+      "updatedAt": "2024-09-07T11:45:00"
+    }
+  ]

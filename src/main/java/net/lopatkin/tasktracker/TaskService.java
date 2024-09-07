@@ -1,39 +1,47 @@
 package net.lopatkin.tasktracker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class TaskService {
 
     private static final String FILE_NAME = "tasks.json";
-    private static final String STATUS_NOT_DONE = "not_done";
-    private static final String STATUS_IN_PROGRESS = "in_progress";
-    private static final String STATUS_DONE = "done";
+    public static final String STATUS_NOT_DONE = "not_done";
+    public static final String STATUS_IN_PROGRESS = "in_progress";
+    public static final String STATUS_DONE = "done";
 
     private final ObjectMapper objectMapper;
+
+    public TaskService() {
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
+        this.objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
 
     public void addTask(String description) {
         var tasks = getAllTasks();
         var newId = tasks.isEmpty() ? 1 : tasks.get(tasks.size() - 1).id() + 1;
-        tasks.add(new Task(newId, description, STATUS_NOT_DONE));
+        tasks.add(new Task(newId, description, STATUS_NOT_DONE, LocalDateTime.now(), LocalDateTime.now()));
         saveTasks(tasks);
     }
 
     public void updateTask(int id, String description) {
         var tasks = getAllTasks();
         var updatedTasks = tasks.stream()
-            .map(task -> task.id() == id ? new Task(task.id(), description, task.status()) : task)
+            .map(task -> task.id() == id ? new Task(task.id(), description, task.status(), task.createdAt(), LocalDateTime.now()) : task)
             .collect(Collectors.toList());
         saveTasks(updatedTasks);
     }
@@ -47,7 +55,7 @@ public class TaskService {
     public void markTask(int id, String status) {
         var tasks = getAllTasks();
         var updatedTasks = tasks.stream()
-            .map(task -> task.id() == id ? new Task(task.id(), task.description(), status) : task)
+            .map(task -> task.id() == id ? new Task(task.id(), task.description(), status, task.createdAt(), LocalDateTime.now()) : task)
             .collect(Collectors.toList());
         saveTasks(updatedTasks);
     }
