@@ -3,6 +3,7 @@ package net.lopatkin.tasktracker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,7 +15,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class TaskServiceTests {
+@DisplayName("Task Service Tests")
+class TaskServiceTests {
 
     @Autowired
     private TaskService taskService;
@@ -35,6 +37,7 @@ public class TaskServiceTests {
     }
 
     @Test
+    @DisplayName("Adding a task should increase the task list size")
     void testAddTask() {
         taskService.addTask("Test task");
         List<Task> tasks = taskService.getAllTasks();
@@ -43,6 +46,7 @@ public class TaskServiceTests {
     }
 
     @Test
+    @DisplayName("Deleting a task should remove it from the task list")
     void testDeleteTask() {
         taskService.addTask("Task to delete");
         List<Task> tasks = taskService.getAllTasks();
@@ -55,6 +59,28 @@ public class TaskServiceTests {
     }
 
     @Test
+    @DisplayName("Listing tasks when the list is empty should display 'No tasks found' for all filters")
+    void testListEmptyTasks() {
+        taskService.clearAllTasks();
+
+        taskService.listTasks("all");
+        assertEquals("No tasks found.", outContent.toString().trim());
+
+        outContent.reset();
+        taskService.listTasks("not_done");
+        assertEquals("No tasks found.", outContent.toString().trim());
+
+        outContent.reset();
+        taskService.listTasks("in_progress");
+        assertEquals("No tasks found.", outContent.toString().trim());
+
+        outContent.reset();
+        taskService.listTasks("done");
+        assertEquals("No tasks found.", outContent.toString().trim());
+    }
+
+    @Test
+    @DisplayName("Listing tasks should display all added tasks")
     void testListTasks() {
         taskService.addTask("Test task 1");
         taskService.addTask("Test task 2");
@@ -67,6 +93,7 @@ public class TaskServiceTests {
     }
 
     @Test
+    @DisplayName("Marking a task should update its status")
     void testMarkTask() {
         taskService.addTask("Task to mark");
         List<Task> tasks = taskService.getAllTasks();
@@ -79,6 +106,7 @@ public class TaskServiceTests {
     }
 
     @Test
+    @DisplayName("Updating a task should change its description")
     void testUpdateTask() {
         taskService.addTask("Original task");
         List<Task> tasks = taskService.getAllTasks();
