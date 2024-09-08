@@ -1,7 +1,13 @@
 # tasktracker
 Task tracker is a project used to track and manage your tasks.
 
+## Description
+
+Task tracker is a simple command-line application that allows you to add, update, delete and list tasks.
+
 ## Compiling with GraalVM
+
+This project is compiled with GraalVM to be able to run as a native executable.
 
 ### Setup GraalVM using SDKMAN!
 
@@ -43,3 +49,9 @@ Task tracker is a project used to track and manage your tasks.
    ```
 
 Note: Ensure you have the necessary dependencies installed for native compilation on your system.
+
+
+## Acknowledgments
+
+- This project was inspired by roadmaps.sh (https://roadmap.sh/projects/task-tracker)
+- Thanks to Spring Boot and GraalVM to be able to compile Java project into a native executable and start blazingly fast.
